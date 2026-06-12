@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
-from .models import Todo
-from .forms import TodoForm
+from .models import Todo, Profile
+from .forms import TodoForm, ProfileUpdateForm
 
 
 def register_view(request):
@@ -11,6 +11,7 @@ def register_view(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
+            Profile.objects.create(user=user)  # Create a profile for the new user
             login(request, user)
             return redirect("todo_list")
     else:
@@ -33,6 +34,25 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect("login")
+
+
+@login_required
+def profile_view(request):
+    try:
+        profile = request.user.profile
+    except Profile.DoesNotExist:
+        profile = Profile.objects.create(user=request.user)
+
+    if request.method == 'POST':
+        form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = ProfileUpdateForm(instance=profile)
+
+    context = {'form': form}
+    return render(request, 'todos/profile.html', context)
 
 
 @login_required

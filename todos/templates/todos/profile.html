@@ -1,0 +1,13 @@
+{% extends "todos/base.html" %} {% block content %}
+<h2>Profile</h2>
+<img
+  src="{{ user.profile.image.url }}"
+  style="width: 50px; height: 50px; border-radius: 50%"
+/>
+<form method="POST" enctype="multipart/form-data">
+  {% csrf_token %} {{ form.as_p }}
+  <button type="submit">Update</button>
+</form>
+<br />
+<a href="{% url 'todo_list' %}">Back to Home</a>
+{% endblock %}
