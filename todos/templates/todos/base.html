@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo App</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        max-width: 500px;
+        margin: 40px auto;
+        padding: 0 20px;
+        background: #f4f4f4;
+      }
+      a {
+        color: #0066cc;
+      }
+      button {
+        cursor: pointer;
+      }
+      hr {
+        border: none;
+        border-top: 1px solid #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      {% if user.is_authenticated %}
+      <p>
+        Logged in as: {{ user.username }} |
+        <a href="{% url 'logout' %}">Logout</a>
+      </p>
+      {% else %}
+      <p>
+        <a href="{% url 'login' %}">Login</a> |
+        <a href="{% url 'register' %}">Register</a>
+      </p>
+      {% endif %}
+      <hr />
+      {% block content %} {% endblock %}
+    </div>
+  </body>
+</html>
