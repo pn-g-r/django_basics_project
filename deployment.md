@@ -67,8 +67,11 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
 }
 
-# Set the default file storage to Cloudinary
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    }
+}
 
 # The URL that will be used to serve media files
 MEDIA_URL = '/media/'
@@ -107,14 +110,15 @@ This file tells Railway what command to run to start your web server. Create a f
 **`Procfile`**:
 
 ```
-web: gunicorn todo_project.wsgi
+web: gunicorn t.python-version`
+
+This file specifies the Python version to use for the Nixpacks build system. Create a file named `.python-version` in the root directory.
+
+**`.python-version`**:
+
 ```
 
-### Step 3.2: `runtime.txt`
-
-This file specifies the Python version to use. Create a file named `runtime.txt` in the root directory.
-
-**`runtime.txt`**:
+ime.txt`\*\*:
 
 ```
 python-3.12.6
@@ -183,30 +187,25 @@ You need to provide Railway with your secret keys for Django, the database, and 
 
 ### Step 4.5: Deploy the Code
 
-Deploy your project by pushing your code to the `main` branch of the Railway-provided repository.
+Deploy your project directly from your local terminal using the Railway CLI.
 
 ```bash
-# This command may vary based on your git remote name
-git push railway main
+railway up
 ```
 
-Railway will detect the push, build your project using `requirements.txt`, and start it using the `Procfile` command.
+Railway will bundle your code, build the project using Nixpacks, and deploy it to your server.
 
 ## 5. Post-Deployment: Run Migrations
 
-After the first deployment, you must run your database migrations on the Railway server. This is done using the Railway CLI from your local terminal.
+Automate Migrations
 
-1.  Make sure you are in your project directory locally.
-2.  Run the migrate command using `railway run`:
+It is best practice to automate migrations so they run every time you deploy new code.
 
-    ```bash
-    railway run python manage.py migrate
-    ```
+1. Open your Railway dashboard and go to your Django service.
+2. Navigate to **Settings** > **Deploy**.
+3. Under **Release Command**, enter: `python manage.py migrate`.
 
-3.  To create a superuser to access the admin panel, run:
+Now, Railway will safely apply database migrations before releasing the new version of your app.
 
-    ```bash
-    railway run python manage.py createsuperuser
-    ```
-
+_(Note: Creating a superuser is a one-time manual task. You can run `railway run python manage.py createsuperuser` from your local terminal to do this.)_
 Your Django To-Do application is now live on Railway, with image uploads handled by Cloudinary!
