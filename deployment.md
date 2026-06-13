@@ -6,7 +6,7 @@ This guide provides step-by-step instructions for deploying the Django todo proj
 
 - A [Railway](https://railway.app) account.
 - A [Cloudinary](https://cloudinary.com/) account (the free tier is sufficient).
-- The [Railway CLI](https://docs.railway.app/cli/installation) installed on your local machine.
+- A [GitHub](https://github.com/) account to host your code.
 - [Git](https://git-scm.com/downloads) installed on your local machine.
 
 ## 2. Local Setup for Production
@@ -110,18 +110,17 @@ This file tells Railway what command to run to start your web server. Create a f
 **`Procfile`**:
 
 ```
-web: gunicorn t.python-version`
+web: gunicorn todo_project.wsgi
+```
+
+### Step 3.2: `.python-version`
 
 This file specifies the Python version to use for the Nixpacks build system. Create a file named `.python-version` in the root directory.
 
 **`.python-version`**:
 
 ```
-
-ime.txt`\*\*:
-
-```
-python-3.12.6
+3.12.6
 ```
 
 _(Adjust the version if you used a different one locally)_.
@@ -148,24 +147,24 @@ git add .
 git commit -m "Prepare for deployment"
 ```
 
-### Step 4.2: Initialize Railway Project
+### Step 4.2: Push to GitHub
 
-Log in to the Railway CLI and initialize your project.
+Create a new repository on GitHub and push your code to it.
 
 ```bash
-railway login
-railway init
+git remote add origin https://github.com/yourusername/yourreponame.git
+git branch -M main
+git push -u origin main
 ```
 
-Follow the prompts, choosing to create a new project.
-
-### Step 4.3: Add PostgreSQL Service
+### Step 4.3: Initialize Railway Project and Add PostgreSQL
 
 From the Railway dashboard:
 
-1.  Navigate to your newly created project.
-2.  Click **+ New** and select **Database**.
-3.  Choose **Add PostgreSQL**.
+1. Click **+ New Project** and select **Deploy from GitHub repo**.
+2. Select your newly created repository.
+3. Once the project is created, click **+ New** and select **Database**.
+4. Choose **Add PostgreSQL**.
 
 ### Step 4.4: Configure Environment Variables
 
@@ -187,13 +186,13 @@ You need to provide Railway with your secret keys for Django, the database, and 
 
 ### Step 4.5: Deploy the Code
 
-Deploy your project directly from your local terminal using the Railway CLI.
+Since you connected your GitHub repository, Railway will automatically deploy your code whenever you push changes to the `main` branch. Simply push your code to GitHub:
 
 ```bash
-railway up
+git push origin main
 ```
 
-Railway will bundle your code, build the project using Nixpacks, and deploy it to your server.
+Railway will detect the push, build your project using Nixpacks, and deploy it to your server.
 
 ## 5. Post-Deployment: Run Migrations
 
@@ -207,5 +206,5 @@ It is best practice to automate migrations so they run every time you deploy new
 
 Now, Railway will safely apply database migrations before releasing the new version of your app.
 
-_(Note: Creating a superuser is a one-time manual task. You can run `railway run python manage.py createsuperuser` from your local terminal to do this.)_
+_(Note: Creating a superuser is a one-time manual task. You can do this by using the Command Palette (Cmd/Ctrl + K) in the Railway dashboard for your Django service and running `python manage.py createsuperuser`)_
 Your Django To-Do application is now live on Railway, with image uploads handled by Cloudinary!
