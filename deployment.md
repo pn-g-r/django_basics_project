@@ -194,28 +194,19 @@ Railway will detect the push, build your project using `requirements.txt`, and s
 
 ## 5. Post-Deployment: Run Migrations
 
-After the first deployment, you must run your database migrations on the Railway server.
+After the first deployment, you must run your database migrations on the Railway server. This is done using the Railway CLI from your local terminal.
 
-1.  Open the Railway dashboard for your project.
-2.  Go to the **Deployments** tab and click on your latest deployment.
-3.  You will see a shell/terminal interface. Run the migrate command:
+1.  Make sure you are in your project directory locally.
+2.  Run the migrate command using `railway run`:
 
-```bash
-python manage.py migrate
-```
+    ```bash
+    railway run python manage.py migrate
+    ```
 
-You may also want to create a superuser to access the admin panel:
+3.  To create a superuser to access the admin panel, run:
 
-```bash
-python manage.py createsuperuser
-```
+    ```bash
+    railway run python manage.py createsuperuser
+    ```
 
 Your Django To-Do application is now live on Railway, with image uploads handled by Cloudinary!
-
-You may also want to create a superuser to access the admin panel:
-
-```bash
-python manage.py createsuperuser
-```
-
-Your Django To-Do application is now live on Railway!
